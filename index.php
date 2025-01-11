@@ -91,7 +91,7 @@
                         </div>
   
                         <div class="ps-3 card-title-wrapper end">
-                            <div class="ps-3 card-title-wrapper span text-V">45</div>
+                            <div class="ps-3 card-title-wrapper span text-V">268</div>
                             <div class="ps-3 card-title-wrapper span text-normal ">
                                 <div class="status-box">
                                     Normal
@@ -111,13 +111,13 @@
                         <div class="card-title-wrapper">
                             <h5 class="card-title"> 
                                 <img src="assets/img/5.png" alt="SPO2 Logo" style="width: 40px; height: auto;">
-                                TDS(ppm)
+                                TDS/Average Daily
                             </h5>
                         </div>
   
                         
                         <div class="ps-3 card-title-wrapper end">
-                            <div class="ps-3 card-title-wrapper span text-V">45</div>
+                            <div class="ps-3 card-title-wrapper span text-V">195</div>
                             <div class="ps-3 card-title-wrapper span text-normal ">
                                 <div class="status-box">
                                     Normal
