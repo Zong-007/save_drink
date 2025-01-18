@@ -24,7 +24,7 @@ if (isset($_GET['TDS'])) {
     $timestamp = date("Y-m-d H:i:s"); // เวลาปัจจุบัน
 
     // ใช้ prepared statement
-    $stmt = $conn->prepare("INSERT INTO save_drink (TDS, Date) VALUES (?, ?)");
+    $stmt = $conn->prepare("INSERT INTO save_drink (TDS, day) VALUES (?, ?)");
     $stmt->bind_param("is", $tds, $timestamp);
 
     // ดำเนินการเพิ่มข้อมูล
