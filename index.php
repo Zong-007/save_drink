@@ -9,6 +9,9 @@
   <meta content="" name="description">
   <meta content="" name="keywords">
 
+  <!-- เพิ่ม jQuery CDN ก่อนโค้ด JavaScript ที่ใช้งาน jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
   <!-- Favicons -->
   <link href="assets/img/favicon.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
@@ -41,6 +44,49 @@
 
 <body>
   
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- โหลด jQuery -->
+
+  <script>
+      // ฟังก์ชันที่จะดึงข้อมูลจากฐานข้อมูลทุกๆ 5 วินาที
+      function fetchData() {
+          $.ajax({
+              url: 'sent_data/connect.php', // ไฟล์ PHP ที่ดึงข้อมูลจากฐานข้อมูล
+              method: 'GET',
+              dataType: 'json', // กำหนดให้รับข้อมูลในรูปแบบ JSON
+              success: function(response) {
+                  // ตรวจสอบว่ามีข้อมูลหรือไม่
+                  if (response.error) {
+                      // หากเกิดข้อผิดพลาด
+                      $('#TDS_TODAY').html("ข้อผิดพลาด: " + response.error);
+                      $('#TDS_YESTERDAY').html("");
+                      $('#Date_TODAY').html("");
+                      $('#Date_YESTERDAY').html("");
+                  } else {
+                      // ถ้ามีข้อมูล, อัปเดตข้อมูลใน HTML
+                      $('#TDS_TODAY').html(response.TDS_TODAY !== null ? response.TDS_TODAY : "ไม่มีข้อมูล");
+                      $('#TDS_YESTERDAY').html(response.TDS_YESTERDAY !== null ? response.TDS_YESTERDAY : "ไม่มีข้อมูล");
+                      $('#Date_TODAY').html(response.Date_TODAY !== null ? response.Date_TODAY : "ไม่มีข้อมูล");
+                      $('#Date_YESTERDAY').html(response.Date_YESTERDAY !== null ? response.Date_YESTERDAY : "ไม่มีข้อมูล");
+                  }
+              },
+              error: function(xhr, status, error) {
+                  // หากเกิดข้อผิดพลาดในการเชื่อมต่อ
+                  $('#TDS_TODAY').html("เกิดข้อผิดพลาดในการดึงข้อมูล: " + error);
+                  $('#TDS_YESTERDAY').html("");
+                  $('#Date_TODAY').html("");
+                  $('#Date_YESTERDAY').html("");
+              }
+          });
+      }
+
+      // เรียกใช้ฟังก์ชันทุกๆ 5 วินาที
+      setInterval(fetchData, 5000); // 5000 มิลลิวินาที = 5 วินาที
+
+      // เรียกใช้ครั้งแรกเมื่อโหลดหน้า
+      fetchData();
+  </script>
+
+
   <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top d-flex align-items-center">
 
@@ -91,11 +137,8 @@
                         </div>
   
                         <div class="ps-3 card-title-wrapper end">
-                            <div class="ps-3 card-title-wrapper span text-V">268</div>
-                            <div class="ps-3 card-title-wrapper span text-normal ">
-                                <div class="status-box">
-                                    Normal
-                                </div>
+                            <div class="ps-3 card-title-wrapper span text-V">
+                              <div id="TDS_TODAY"></div>
                             </div>
                         </div>
                     </div>
@@ -117,11 +160,8 @@
   
                         
                         <div class="ps-3 card-title-wrapper end">
-                            <div class="ps-3 card-title-wrapper span text-V">195</div>
-                            <div class="ps-3 card-title-wrapper span text-normal ">
-                                <div class="status-box">
-                                    Normal
-                                </div>
+                            <div class="ps-3 card-title-wrapper span text-V">
+                              <div id="TDS_YESTERDAY"></div>
                             </div>
                         </div>
                             
