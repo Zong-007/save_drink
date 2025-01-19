@@ -65,12 +65,13 @@
                       // ถ้ามีข้อมูล, อัปเดตข้อมูลใน HTML
                       var tdsValue = response.TDS_TODAY !== null ? response.TDS_TODAY : "ไม่มีข้อมูล";
                       $('#TDS_TODAY').html(tdsValue);
-                      $('#TDS_YESTERDAY').html(response.TDS_YESTERDAY !== null ? response.TDS_YESTERDAY : "ไม่มีข้อมูล");
+                      var tdsValue_Y = response.TDS_YESTERDAY !== null ? response.TDS_YESTERDAY : "ไม่มีข้อมูล";
+                      $('#TDS_YESTERDAY').html(tdsValue);
                       $('#Date_TODAY').html(response.Date_TODAY !== null ? response.Date_TODAY : "ไม่มีข้อมูล");
                       $('#Date_YESTERDAY').html(response.Date_YESTERDAY !== null ? response.Date_YESTERDAY : "ไม่มีข้อมูล");
 
                       // เรียกฟังก์ชันการเปลี่ยนสีหลังจากอัปเดตข้อมูล
-                      changeTextColor(tdsValue);
+                      changeTextColor(tdsValue,tdsValue_Y);
                   }
               },
               error: function(xhr, status, error) {
@@ -84,7 +85,7 @@
       }
 
       // ฟังก์ชันในการเปลี่ยนสีข้อความตามค่า TDS_TODAY
-      function changeTextColor(tdsValue) {
+      function changeTextColor(tdsValue,tdsValue_Y) {
           var tdsValueNum = parseInt(tdsValue); // แปลงค่าเป็นตัวเลข
           if (isNaN(tdsValueNum)) return; // ตรวจสอบว่าเป็นตัวเลขไหม
 
@@ -100,6 +101,23 @@
               $('#TDS_TODAY').css("color", "orange"); // ST77XX_ORANGE
           } else {
               $('#TDS_TODAY').css("color", "red"); // ST77XX_RED
+          }
+
+          var tdsValueNum1 = parseInt(tdsValue_Y); // แปลงค่าเป็นตัวเลข
+          if (isNaN(tdsValueNum)) return; // ตรวจสอบว่าเป็นตัวเลขไหม
+
+          if (tdsValueNum1 < 50) {
+              $('#TDS_YESTERDAY').css("color", "cyan"); // ST77XX_CYAN
+          } else if (tdsValueNum1 < 150) {
+              $('#TDS_YESTERDAY').css("color", "blue"); // ST77XX_BLUE
+          } else if (tdsValueNum1 < 300) {
+              $('#TDS_YESTERDAY').css("color", "magenta"); // ST77XX_MAGENTA
+          } else if (tdsValueNum1 < 500) {
+              $('#TDS_YESTERDAY').css("color", "yellow"); // ST77XX_YELLOW
+          } else if (tdsValueNum1 < 1200) {
+              $('#TDS_YESTERDAY').css("color", "orange"); // ST77XX_ORANGE
+          } else {
+              $('#TDS_YESTERDAY').css("color", "red"); // ST77XX_RED
           }
       }
 
