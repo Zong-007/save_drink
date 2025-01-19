@@ -63,10 +63,14 @@
                       $('#Date_YESTERDAY').html("");
                   } else {
                       // ถ้ามีข้อมูล, อัปเดตข้อมูลใน HTML
-                      $('#TDS_TODAY').html(response.TDS_TODAY !== null ? response.TDS_TODAY : "ไม่มีข้อมูล");
+                      var tdsValue = response.TDS_TODAY !== null ? response.TDS_TODAY : "ไม่มีข้อมูล";
+                      $('#TDS_TODAY').html(tdsValue);
                       $('#TDS_YESTERDAY').html(response.TDS_YESTERDAY !== null ? response.TDS_YESTERDAY : "ไม่มีข้อมูล");
                       $('#Date_TODAY').html(response.Date_TODAY !== null ? response.Date_TODAY : "ไม่มีข้อมูล");
                       $('#Date_YESTERDAY').html(response.Date_YESTERDAY !== null ? response.Date_YESTERDAY : "ไม่มีข้อมูล");
+
+                      // เรียกฟังก์ชันการเปลี่ยนสีหลังจากอัปเดตข้อมูล
+                      changeTextColor(tdsValue);
                   }
               },
               error: function(xhr, status, error) {
@@ -77,6 +81,26 @@
                   $('#Date_YESTERDAY').html("");
               }
           });
+      }
+
+      // ฟังก์ชันในการเปลี่ยนสีข้อความตามค่า TDS_TODAY
+      function changeTextColor(tdsValue) {
+          var tdsValueNum = parseInt(tdsValue); // แปลงค่าเป็นตัวเลข
+          if (isNaN(tdsValueNum)) return; // ตรวจสอบว่าเป็นตัวเลขไหม
+
+          if (tdsValueNum < 50) {
+              $('#TDS_TODAY').css("color", "cyan"); // ST77XX_CYAN
+          } else if (tdsValueNum < 150) {
+              $('#TDS_TODAY').css("color", "blue"); // ST77XX_BLUE
+          } else if (tdsValueNum < 300) {
+              $('#TDS_TODAY').css("color", "magenta"); // ST77XX_MAGENTA
+          } else if (tdsValueNum < 500) {
+              $('#TDS_TODAY').css("color", "yellow"); // ST77XX_YELLOW
+          } else if (tdsValueNum < 1200) {
+              $('#TDS_TODAY').css("color", "orange"); // ST77XX_ORANGE
+          } else {
+              $('#TDS_TODAY').css("color", "red"); // ST77XX_RED
+          }
       }
 
       // เรียกใช้ฟังก์ชันทุกๆ 5 วินาที
@@ -144,26 +168,7 @@
                     </div>
                 </div>
             </div><!-- End Sales Card -->
-            <script>
-                // รับค่าจาก div
-                var tdsValue = parseInt(document.getElementById("TDS_TODAY").textContent);
 
-                // กำหนดสีตามเงื่อนไข
-                if (tdsValue < 50) {
-                    document.getElementById("TDS_TODAY").style.color = "cyan"; // ST77XX_CYAN
-                } else if (tdsValue < 150) {
-                    document.getElementById("TDS_TODAY").style.color = "blue"; // ST77XX_BLUE
-                } else if (tdsValue < 300) {
-                    document.getElementById("TDS_TODAY").style.color = "magenta"; // ST77XX_MAGENTA
-                } else if (tdsValue < 500) {
-                    document.getElementById("TDS_TODAY").style.color = "yellow"; // ST77XX_YELLOW
-                } else if (tdsValue < 1200) {
-                    document.getElementById("TDS_TODAY").style.color = "orange"; // ST77XX_ORANGE
-                } else {
-                    document.getElementById("TDS_TODAY").style.color = "red"; // ST77XX_RED
-                }
-            </script>
-            
             <!-- Sales Card -->
             <div class="col-xxl-12 col-md-6">
                 <div class="card info-card sales-card">
