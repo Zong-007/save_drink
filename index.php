@@ -104,7 +104,7 @@
           }
 
           var tdsValueNum1 = parseInt(tdsValue_Y); // แปลงค่าเป็นตัวเลข
-          if (isNaN(tdsValueNum)) return; // ตรวจสอบว่าเป็นตัวเลขไหม
+          if (isNaN(tdsValueNum1)) return; // ตรวจสอบว่าเป็นตัวเลขไหม
 
           if (tdsValueNum1 < 50) {
               $('#TDS_YESTERDAY').css("color", "cyan"); // ST77XX_CYAN
