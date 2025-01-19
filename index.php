@@ -66,7 +66,7 @@
                       var tdsValue = response.TDS_TODAY !== null ? response.TDS_TODAY : "ไม่มีข้อมูล";
                       $('#TDS_TODAY').html(tdsValue);
                       var tdsValue_Y = response.TDS_YESTERDAY !== null ? response.TDS_YESTERDAY : "ไม่มีข้อมูล";
-                      $('#TDS_YESTERDAY').html(tdsValue);
+                      $('#TDS_YESTERDAY').html(tdsValue_Y);
                       $('#Date_TODAY').html(response.Date_TODAY !== null ? response.Date_TODAY : "ไม่มีข้อมูล");
                       $('#Date_YESTERDAY').html(response.Date_YESTERDAY !== null ? response.Date_YESTERDAY : "ไม่มีข้อมูล");
 
