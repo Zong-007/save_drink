@@ -144,7 +144,25 @@
                     </div>
                 </div>
             </div><!-- End Sales Card -->
+            <script>
+                // รับค่าจาก div
+                var tdsValue = parseInt(document.getElementById("TDS_TODAY").textContent);
 
+                // กำหนดสีตามเงื่อนไข
+                if (tdsValue < 50) {
+                    document.getElementById("TDS_TODAY").style.color = "cyan"; // ST77XX_CYAN
+                } else if (tdsValue < 150) {
+                    document.getElementById("TDS_TODAY").style.color = "blue"; // ST77XX_BLUE
+                } else if (tdsValue < 300) {
+                    document.getElementById("TDS_TODAY").style.color = "magenta"; // ST77XX_MAGENTA
+                } else if (tdsValue < 500) {
+                    document.getElementById("TDS_TODAY").style.color = "yellow"; // ST77XX_YELLOW
+                } else if (tdsValue < 1200) {
+                    document.getElementById("TDS_TODAY").style.color = "orange"; // ST77XX_ORANGE
+                } else {
+                    document.getElementById("TDS_TODAY").style.color = "red"; // ST77XX_RED
+                }
+            </script>
             
             <!-- Sales Card -->
             <div class="col-xxl-12 col-md-6">
