@@ -224,64 +224,141 @@
                   
                   <!-- Export Data -->
                   <form action="export.php" method="post" class="form-right" >
-                    <button class="button" type="submit">Export Data</button>
+                    <button class="button" type="submit">
+                      <img src="assets/img/download.png" alt="Export Data" style="width: 40px; height: 40px;">
+                    </button>
                   </form>
 
                   <!-- Line Chart -->
                   <div id="reportsChart"></div>
 
                   <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                      new ApexCharts(document.querySelector("#reportsChart"), {
-                        series: [{
-                          name: 'Sales',
-                          data: [31, 40, 28, 51, 42, 82, 56],
-                        }, {
-                          name: 'Revenue',
-                          data: [11, 32, 45, 32, 34, 52, 41]
-                        }, {
-                          name: 'Customers',
-                          data: [15, 11, 32, 18, 9, 24, 11]
-                        }],
-                        chart: {
-                          height: 350,
-                          type: 'area',
-                          toolbar: {
-                            show: false
-                          },
-                        },
-                        markers: {
-                          size: 4
-                        },
-                        colors: ['#4154f1', '#2eca6a', '#ff771d'],
-                        fill: {
-                          type: "gradient",
-                          gradient: {
-                            shadeIntensity: 1,
-                            opacityFrom: 0.3,
-                            opacityTo: 0.4,
-                            stops: [0, 90, 100]
-                          }
-                        },
-                        dataLabels: {
-                          enabled: false
-                        },
-                        stroke: {
-                          curve: 'smooth',
-                          width: 2
-                        },
-                        xaxis: {
-                          type: 'datetime',
-                          categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-                        },
-                        tooltip: {
-                          x: {
-                            format: 'dd/MM/yy HH:mm'
-                          },
+                    var chart; // ตัวแปรสำหรับเก็บกราฟ
+
+                    // ฟังก์ชันที่จะดึงข้อมูลจากฐานข้อมูลทุกๆ 5 วินาที
+                    function fetchData() {
+                        $.ajax({
+                            url: 'sent_data/line_chart.php', // ไฟล์ PHP ที่ดึงข้อมูลจากฐานข้อมูล
+                            method: 'GET',
+                            dataType: 'json', // กำหนดให้รับข้อมูลในรูปแบบ JSON
+                            success: function (response) {
+                                // ตรวจสอบว่ามีข้อมูลหรือไม่
+                                if (response.error) {
+                                    // ถ้ามีข้อผิดพลาด
+                                    $('#TDS').html(0); // แสดง 0 หากไม่มี TDS
+                                } else {
+                                    // ถ้ามีข้อมูล, อัปเดตข้อมูลทีละตัว
+                                    var last_7_days = response.last_7_days;
+
+                                    if (chart) {
+                                        // เรียกฟังก์ชันการอัปเดตกราฟ
+                                        updateChart(last_7_days);
+                                    } else {
+                                        // สร้างกราฟใหม่
+                                        createChart(last_7_days);
+                                    }
+                                }
+                            },
+                            error: function () {
+                                // หากเกิดข้อผิดพลาดในการเชื่อมต่อ
+                                $('#TDS').html("เกิดข้อผิดพลาดในการดึงข้อมูล");
+                            }
+                        });
+                    }
+
+                    // ฟังก์ชันสร้างกราฟครั้งแรก
+                    function createChart(last_7_days_data) {
+                        var labels = []; // วันที่
+                        var tdsData = []; // ค่า TDS
+
+                        // เตรียมข้อมูลจาก response
+                        last_7_days_data.forEach(function (dayData) {
+                            labels.push(dayData.date); // วันที่
+                            tdsData.push(dayData.TDS); // ค่า TDS
+                        });
+
+                        // กำหนดค่า options สำหรับกราฟ
+                        var options = {
+                            series: [{
+                                name: 'TDS',
+                                data: tdsData // ใช้ค่า TDS จากข้อมูล
+                            }],
+                            chart: {
+                                height: 350,
+                                type: 'area',
+                                toolbar: {
+                                    show: false
+                                },
+                            },
+                            markers: {
+                                size: 4
+                            },
+                            colors: ['#00fffb'],
+                            fill: {
+                                type: "gradient",
+                                gradient: {
+                                    shadeIntensity: 1,
+                                    opacityFrom: 0.3,
+                                    opacityTo: 0.4,
+                                    stops: [0, 90, 100]
+                                }
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            stroke: {
+                                curve: 'smooth',
+                                width: 2
+                            },
+                            xaxis: {
+                                type: 'category',
+                                categories: labels // วันที่ที่ได้รับจากข้อมูล
+                            },
+                            tooltip: {
+                                x: {
+                                    format: 'yyyy-MM-dd'
+                                },
+                            }
+                        };
+
+                        // สร้างกราฟใหม่และเก็บไว้ในตัวแปร chart
+                        chart = new ApexCharts(document.querySelector("#reportsChart"), options);
+                        chart.render();
+                    }
+
+                    // ฟังก์ชันอัปเดตกราฟ
+                    function updateChart(last_7_days_data) {
+                        if (chart) {
+                            var labels = []; // วันที่
+                            var tdsData = []; // ค่า TDS
+
+                            // เตรียมข้อมูลจาก response
+                            last_7_days_data.forEach(function (dayData) {
+                                labels.push(dayData.date); // วันที่
+                                tdsData.push(dayData.TDS); // ค่า TDS
+                            });
+
+                            // อัปเดตข้อมูลในกราฟที่มีอยู่
+                            chart.updateOptions({
+                                series: [{
+                                    name: 'TDS',
+                                    data: tdsData // ใช้ค่า TDS จากข้อมูลใหม่
+                                }],
+                                xaxis: {
+                                    categories: labels // อัปเดตวันที่
+                                }
+                            });
                         }
-                      }).render();
+                    }
+
+                    // เรียกฟังก์ชัน fetchData ทุก 5 วินาที
+                    setInterval(fetchData, 5000); // ทุก 5 วินาที
+
+                    // สร้างกราฟครั้งแรกเมื่อโหลดหน้า
+                    $(document).ready(function () {
+                        fetchData(); // ดึงข้อมูลทันทีเมื่อโหลดหน้า
                     });
-                  </script>
+                </script>
                   <!-- End Line Chart -->
 
                 </div>
